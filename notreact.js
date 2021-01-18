@@ -1,22 +1,19 @@
-import deepMerge from "./deep_merge.js";
+import {mergeDeep, valuesEqual} from "./utils.js";
 
-let states;
-let stateIndex;
+let hooks;
+let hooksIndex;
 let renderContainer;
 let initialRootElement;
-// let renderedElements;
 export const NotReactDom = {
     render(container, rootElement) {
         renderContainer = container;
         initialRootElement = rootElement;
-        // renderedElements = [];
-        states = [];
+        hooks = [];
         this.refresh();
     },
     refresh() {
         let previousElements = [...renderContainer.children];
-        // renderedElements = [];
-        stateIndex = 0;
+        hooksIndex = 0;
         initialRootElement.render(renderContainer);
         previousElements.forEach((elem) => elem.remove());
     },
@@ -31,9 +28,8 @@ export const NotReact = {
                     elem.render(parentElement);
                 } else {
                     let newElement = document.createElement(type);
-                    // renderedElements.push(newElement);
                     if (props) {
-                        deepMerge(newElement, props);
+                        mergeDeep(newElement, props);
                     }
                     parentElement.appendChild(newElement);
                     parentElement = newElement;
@@ -42,7 +38,6 @@ export const NotReact = {
                             child.render(parentElement);
                         } else {
                             let textNode = document.createTextNode(child);
-                            // renderedElements.push(textNode);
                             parentElement.appendChild(textNode);
                         }
                     });
@@ -52,18 +47,30 @@ export const NotReact = {
     },
     Fragment({ children }) {},
     useState(initialValue) {
-        let thisIndex = stateIndex;
-        if (typeof states[thisIndex] === "undefined") {
-            states[thisIndex] = initialValue;
+        let thisIndex = hooksIndex;
+        hooksIndex++;
+        if (typeof hooks[thisIndex] === "undefined") {
+            hooks[thisIndex] = initialValue;
         }
-        stateIndex++;
         return [
-            states[thisIndex],
+            hooks[thisIndex],
             (newVal) => {
-                states[thisIndex] = newVal;
+                hooks[thisIndex] = newVal;
                 NotReactDom.refresh();
             },
         ];
     },
+    useEffect(callBack, newVal = Math.random()){
+        let thisIndex = hooksIndex;
+        hooksIndex++;
+        if(hooks[thisIndex] && valuesEqual(newVal, hooks[thisIndex].value)){
+            return;
+        }
+        hooks[thisIndex] = {
+            value: newVal,
+            cleanup: callBack()
+        };
+    }
 };
 export const useState = NotReact.useState;
+export const useEffect = NotReact.useEffect;

@@ -1,4 +1,4 @@
-import { NotReact, NotReactDom, useState } from "./notreact.js";
+import { NotReact, NotReactDom, useState, useEffect } from "./notreact.js";
 
 const App = ({ myName }) =>
     // NotReact.createElement(NotReact.Fragment,{},[])
@@ -11,8 +11,18 @@ const App = ({ myName }) =>
         NotReact.createElement(MainPage),
     ]);
 
-function MainPage(props) {
+function MainPage() {
     const [count, setCount] = useState(12);
+    useEffect(()=>{
+        console.log("every time...");
+    });
+    useEffect(()=>{
+        console.log("when new decade...");
+    }, Math.floor(count/10));
+    useEffect(()=>{
+        console.log("only once...");
+    }, []);
+    
     return NotReact.createElement("div", { id: "main-page" }, [
         NotReact.createElement("p", null, ["counter:", count]),
         NotReact.createElement(
