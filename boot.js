@@ -1,4 +1,4 @@
-import { NotReact, NotReactDom } from "./notreact.js";
+import { NotReact, NotReactDom, useState } from "./notreact.js";
 
 const App = ({ myName }) =>
     // NotReact.createElement(NotReact.Fragment,{},[])
@@ -17,7 +17,7 @@ function MainPage(props) {
         NotReact.createElement("p", null, ["counter:", count]),
         NotReact.createElement(
             "button",
-            { onClick: (evt) => setCount(count + 1) },
+            { onclick: (evt) => setCount(count + 1) },
             ["Click me!"]
         ),
     ]);
@@ -25,5 +25,5 @@ function MainPage(props) {
 
 NotReactDom.render(
     document.getElementById("myContainer"),
-    NotReact.createElement(App, { myName: "Hello le gaming" })
+    NotReact.createElement(App, { myName: "Nicolas" })
 );
