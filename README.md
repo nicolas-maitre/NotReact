@@ -1,7 +1,7 @@
 # NotReact
 Basic React recreation because I tought it was fun 😶.
 
-Demo website: https://github.com/nicolas-maitre/NotReact
+Demo website: https://nicolas-maitre.github.io/NotReact/
 
 Implemented features:
 - Dom components
